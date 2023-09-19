@@ -8,8 +8,16 @@
 #ifndef IO_H_
 #define IO_H_
 
-static void assign_enum(char*, int);
-static char** read_file();
-static char** open_file();
+#define LINE_LENGTH 30
+
+struct screens {
+    char* primary;
+    char* secondary;
+    char* tertiary;
+};
+typedef struct screens screens;
+extern screens targets;
+
+void initScreenTargets();
 
 #endif /* IO_H_ */

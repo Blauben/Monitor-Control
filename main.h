@@ -8,17 +8,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-static int exec();
-int* def_enum();
-static char* build_command(int);
-static char* build_command_target(int);
+#include <stdbool.h>
 
-static int monitors[3] = {0,0,0};
-static int values[]= def_enum();
-
-enum screens {PRIMARY=values[0], SECONDARY=values[1], TERTIARY=values[2]};
-
-typedef enum screens screens;
-typedef struct FILE FILE;
+void build_command(unsigned char*, int, bool*);
+void build_command_target(unsigned char*, int);
 
 #endif /* MAIN_H_ */

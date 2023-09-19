@@ -1,55 +1,32 @@
-/*
- * commands.c
- *
- *  Created on: 23.04.2022
- *      Author: Balthazar
- */
-
 #include <stdlib.h>
+#include <stdio.h>
 #include "io.h"
 
-int* def_enum() {
-	char** string= open_file();
-	int first, second, third;
-	for(int i=0; i<3; i++) {
-		char* line=string[i];
-		int value=*(strchr(line, "=")+1);
-		assign_enum(line, value);
-		}
-	return assign_enum(NULL, 0);
+#define LINE_COUNT 3
+
+screens targets;
+
+void read_line(char* buf, FILE* file) {
+    for(int i=0; i<LINE_COUNT;i++) {
+        fgets(buf, LINE_LENGTH, file );
+    }
 }
 
-static int* assign_enum(char* line, int valueOfScreen) {
-	static int values[3];
-
-	static char* keys[3]={"primary","secondary","tertiary"};
-
-	if(line == NULL || valueOfScreen == 0) {
-		return &values;
-	} else {
-		for(int i=0; i<3;i++) {
-			if (strstr(line, keys[i]) != NULL) {
-				values[i]=valueOfScreen;
-			}
-		}
-	}
-	return NULL;
+FILE* open_file(FILE* file) {
+    if((file = fopen("screens", "r")) == NULL) {
+        fprintf(stderr, "Monitor File \"screen\" could not be opened. Please create it and put the identifier for the first monitor in the first line ect...");
+        exit(1);
+    }
 }
 
-static char** open_file() {
-	FILE *file;
-	if((file = fopen("screens.txt", "r")) == NULL) {
-		printf("Monitor File could not be opened");
-		exit(1);
-	} else {
-		return read_file(file);
-	}
-}
-
-static char** read_file(FILE* file) {
-	char buf[3][30];
-	for(int i=0; i<3;i++) {
-		while(fgets(buf[i], siezof(buf[i]), file )!=0);
-	}
-	return &buf;
+void initScreenTargets() {
+    FILE file;
+    open_file(&file);
+    char buf[LINE_COUNT][30];
+    for(int i = 0; i < LINE_COUNT; i++) {
+        read_line(buf[i], &file);
+    }
+    targets.primary=buf[0];
+    targets.secondary=buf[1];
+    targets.tertiary=buf[2];
 }
