@@ -15,7 +15,10 @@ int main(int argc, char **argv) {
             monitors[1] = true;
         } else if (strcmp(argv[i], "-3") == 0) {
             monitors[2] = true;
-        }
+        } else if(strcmp(argv[i], "-off") == 0) {
+			monitors[0] = monitors[1] = monitors[2] = false;
+			break;
+		}
     }
     if(argc == 1) {
         args_from_cli(monitors);
