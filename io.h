@@ -8,6 +8,8 @@
 #ifndef IO_H_
 #define IO_H_
 
+#include <stdbool.h>
+
 #define LINE_LENGTH 30
 
 struct screens {
@@ -19,5 +21,6 @@ typedef struct screens screens;
 extern screens targets;
 
 void initScreenTargets();
+void args_from_cli(bool*);
 
 #endif /* IO_H_ */

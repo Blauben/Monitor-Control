@@ -1,12 +1,14 @@
+CFLAGS := -Wall -Wextra
+
 .phony: all
 
 all: MonitorControl.exe
 
 MonitorControl.exe: main.c main.h io.c io.h
-	gcc $^ -o $@
+	gcc $^ $(CFLAGS) -o $@
 
 debug: main.c main.h io.c io.h
-	gcc $^ -g3 -o debug.exe
+	gcc $^ $(CFLAGS) -g3 -o debug.exe
 
 clean:
 	rm MonitorControl.exe

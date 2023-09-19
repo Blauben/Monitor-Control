@@ -18,28 +18,31 @@ int main(int argc, char **argv) {
         }
     }
     if(argc == 1) {
-        printf("Please specify which monitors to turn on, the others will be turned off!\n");
+        args_from_cli(monitors);
     }
     for (int i = 0; i < 3; i++) {
-        char command[100];
+        const int csize = 100;
+        char command[csize];
+        memset(command,'\0', csize);
         build_command(command, i, monitors);
-        system(command);
+        printf("%s\n",command);
+        //system(command);
     }
     return EXIT_SUCCESS;
 }
 
-void build_command(unsigned char* command, int screen, bool *monitors) {
-    const unsigned char *exe = "F:\\Programme\\multimonitortool_1.96\\MultiMonitorTool.exe ";
-    const unsigned char *on = "/TurnOn ";
-    const unsigned char *off = "/disable ";
-    unsigned char target[LINE_LENGTH];
+void build_command(char* command, int screen, bool *monitors) {
+    const char *exe = "F:\\Programme\\multimonitortool_1.96\\MultiMonitorTool.exe ";
+    const char *on = "/TurnOn ";
+    const char *off = "/disable ";
+    char target[LINE_LENGTH];
     build_command_target(target, screen);
     strcpy(command, exe);
     strcat(command, monitors[screen] ? on : off);
     strcat(command, target);
 }
 
-void build_command_target(unsigned char* target, int screen) {
+void build_command_target(char* target, int screen) {
     switch (screen) {
         case 0:
             strcpy(target, targets.primary);
