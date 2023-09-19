@@ -10,12 +10,17 @@
 
 #include <stdbool.h>
 
-#define LINE_LENGTH 30
+#define LINE_LENGTH 1024
 
+struct command {
+    char* on;
+    char* off;
+};
+typedef struct command command;
 struct screens {
-    char* primary;
-    char* secondary;
-    char* tertiary;
+    command* primary;
+    command* secondary;
+    command* tertiary;
     char* lib;
 };
 typedef struct screens screens;

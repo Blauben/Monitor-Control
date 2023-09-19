@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         args_from_cli(monitors);
     }
     for (int i = 0; i < 3; i++) {
-        const int csize = 100;
+        const int csize = LINE_LENGTH + 500;
         char command[csize];
         memset(command,'\0', csize);
         build_command(command, i, monitors);
@@ -32,27 +32,22 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
-void build_command(char* command, int screen, const bool *monitors) {
-    const char *on = "/enable /TurnOn";
-    const char *off = "/TurnOff /disable";
-    char target[LINE_LENGTH];
-    build_command_target(target, screen);
-    sprintf(command, "%s %s %s\n", targets->lib, monitors[screen]?on:off, target);
+void build_command(char* str, int screen, const bool *monitors) {
+    command* target = build_command_target(screen);
+    sprintf(str, "%s %s\n", targets->lib, monitors[screen]?target->on:target->off);
 }
 
-void build_command_target(char* target, int screen) {
+command* build_command_target(int screen) {
     switch (screen) {
         case 0:
-            strcpy(target, targets->primary);
+            return targets->primary;
             break;
         case 1:
-            strcpy(target, targets->secondary);
-            break;
-        case 2:
-            strcpy(target, targets->tertiary);
+            return targets->secondary;
             break;
         default:
-            return;
+            return targets->tertiary;
+            break;
     }
 }
 

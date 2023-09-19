@@ -3,7 +3,7 @@
 #include <string.h>
 #include "io.h"
 
-#define LINE_COUNT 4
+#define LINE_COUNT 7
 
 screens* targets;
 
@@ -12,8 +12,15 @@ void read_line(char* buf, FILE* file) {
 }
 
 void open_file(FILE** file) {
-    if((*file = fopen("screens.txt", "r")) == NULL) {
-        fprintf(stderr, "Monitor File \"screen.txt\" could not be opened.\nPlease create it and put the identifier for the first monitor in the first line etc...\nThe fourth line needs to specify the multimonitor library.");
+    if((*file = fopen("screens.txt", "r")) != NULL) {
+        return;
+    }
+    if((*file = fopen("screens.txt", "w")) != NULL) {
+        printf("screens.txt was created please fill in the arguments!");
+        fprintf(*file, "PRIMARY ID + ON ARGS\nPRIMARY ID + OFF ARGS\nSECONDARY ID + ON ARGS\nSECONDARY ID + OFF ARGS\nTERTIARY ID + ON ARGS\nTERTIARY ID + OFF ARGS\nLIB PATH\n");
+        exit(0);
+    } else {
+        fprintf(stderr, "Monitor File \"screen.txt\" could not be created.\nPlease create it and put two lines for on and off argument lists for each monitor in the file.\nThe seventh line needs to specify the multimonitor library.");
         freeTargets();
         exit(1);
     }
@@ -21,9 +28,18 @@ void open_file(FILE** file) {
 
 void remove_newline(char* str) {
     unsigned long length = strlen(str);
-    if(str[length-1] == '\n') {
+    if(length != 0 && str[length-1] == '\n') {
         str[length-1] = '\0';
     }
+}
+
+void* mallocWrapper(size_t size) {
+    void* ptr = malloc(size);
+    if(!ptr) {
+        fprintf(stderr, "Malloc failed!\n");
+        exit(1);
+    }
+    return ptr;
 }
 
 void initScreenTargets() {
@@ -37,22 +53,32 @@ void initScreenTargets() {
         remove_newline(buf[i]);
     }
     fclose(file);
-    targets->primary= malloc(strlen (buf[0])+1);
-    targets->secondary=malloc(strlen (buf[1])+1);
-    targets->tertiary=malloc(strlen (buf[2])+1);
-    targets->lib= malloc(strlen(buf[3])+1);
-    if(!targets || !targets->primary || !targets->secondary || !targets->tertiary || !targets->lib) {
-        fprintf(stderr, "Malloc failed!\n");
-        freeTargets();
-        exit(1);
-    }
-    strcpy(targets->primary, buf[0]);
-    strcpy(targets->secondary, buf[1]);
-    strcpy(targets->tertiary, buf[2]);
-    strcpy(targets->lib, buf[3]);
+    targets->primary= mallocWrapper(sizeof(command));
+    targets->secondary=mallocWrapper(sizeof(command));
+    targets->tertiary=mallocWrapper(sizeof(command));
+    targets->primary->on= mallocWrapper(strlen (buf[0])+1);
+    targets->primary->off= mallocWrapper(strlen (buf[1])+1);
+    targets->secondary->on= mallocWrapper(strlen (buf[2])+1);
+    targets->secondary->off= mallocWrapper(strlen (buf[3])+1);
+    targets->tertiary->on= mallocWrapper(strlen (buf[4])+1);
+    targets->tertiary->off= mallocWrapper(strlen (buf[5])+1);
+    targets->lib= mallocWrapper(strlen(buf[6])+1);
+    strcpy(targets->primary->on, buf[0]);
+    strcpy(targets->primary->off, buf[1]);
+    strcpy(targets->secondary->on, buf[2]);
+    strcpy(targets->secondary->off, buf[3]);
+    strcpy(targets->tertiary->on, buf[4]);
+    strcpy(targets->tertiary->off, buf[5]);
+    strcpy(targets->lib, buf[6]);
 }
 
 void freeTargets() {
+    free(targets->primary->on);
+    free(targets->primary->off);
+    free(targets->secondary->on);
+    free(targets->secondary->off);
+    free(targets->tertiary->on);
+    free(targets->tertiary->off);
     free(targets->primary);
     free(targets->secondary);
     free(targets->tertiary);

@@ -9,8 +9,9 @@
 #define MAIN_H_
 
 #include <stdbool.h>
+#include "io.h"
 
 void build_command(char*, int, const bool*);
-void build_command_target(char*, int);
+command* build_command_target(int);
 
 #endif /* MAIN_H_ */
