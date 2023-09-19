@@ -16,11 +16,13 @@ struct screens {
     char* primary;
     char* secondary;
     char* tertiary;
+    char* lib;
 };
 typedef struct screens screens;
-extern screens targets;
+extern screens* targets;
 
 void initScreenTargets();
 void args_from_cli(bool*);
+void freeTargets();
 
 #endif /* IO_H_ */
