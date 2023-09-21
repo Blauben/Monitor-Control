@@ -30,7 +30,8 @@ int main(int argc, char **argv) {
         memset(command,'\0', csize);
         build_command(command, i, monitors);
         printf("Execute:     %s\n",command);
-        system(command);
+        int code = system(command);
+		printf("%s\n\n", code == 0? "Successful":"Failed");
     }
     freeTargets();
 	Sleep(5000);
@@ -39,7 +40,7 @@ int main(int argc, char **argv) {
 
 void build_command(char* str, int screen, const bool *monitors) {
     command* target = build_command_target(screen);
-    sprintf(str, "%s %s\n", targets->lib, monitors[screen]?target->on:target->off);
+    sprintf(str, "%s %s", targets->lib, monitors[screen]?target->on:target->off);
 }
 
 command* build_command_target(int screen) {
