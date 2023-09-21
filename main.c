@@ -3,6 +3,7 @@
 #include "main.h"
 #include <string.h>
 #include <stdbool.h>
+#include <windows.h>
 #include "io.h"
 
 int main(int argc, char **argv) {
@@ -32,6 +33,7 @@ int main(int argc, char **argv) {
         system(command);
     }
     freeTargets();
+	Sleep(5000);
     return EXIT_SUCCESS;
 }
 
