@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include "io.h"
 
+#define LINE_LENGTH 1024
+
 void build_command(char*, int, const bool*);
 command* build_command_target(int);
 
